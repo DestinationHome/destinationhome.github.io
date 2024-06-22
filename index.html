@@ -25,6 +25,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Destination Home Object Catalogue</title>
+  <meta property="og:title" content="Destination Home Object Catalogue">
+  <meta property="og:description" content="Browse through items and objects available on Destination Home.">
+  <meta property="og:url" content="https://objects.destinationhome.live">
+  <meta property="og:type" content="website">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -481,7 +485,7 @@ var similarObjSkeleton = `
 <div class="columns is-multiline is-mobile" id="similar-objects">
   <div id="saved-item" style="animation: fadeInLeft; width: 100%; margin-bottom: 10px; background-color: rgb(9 11 26 / 71%); border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
     <div style="display: flex; align-items: center;">
-      <img id="saved-item-img" class="preview" src="[SIM_OBJ_IMG]" width="50" height="50" style="animation: fadeIn; animation-duration: 2s; border-radius: 10px;">
+      <img id="saved-item-img" class="preview" src="[SIM_OBJ_IMG]" width="50" height="50" style="animation: fadeIn; animation-duration: 2s; object-fit: cover; width: 50px; height: 50px; border-radius: 10px;">
       <p style="margin-left: 10px; animation: fadeIn; animation-duration: 0.5s;"><b id="saved-item-name-">[SIM_OBJ_NAME]</b><br><span style="font-size: 13px;">[SIM_OBJ_TYPE]</span></p>
     </div>
     <div>
