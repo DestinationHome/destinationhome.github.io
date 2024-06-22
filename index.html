@@ -18,6 +18,11 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⣿⣿⡉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡟⠀⠀⠀⠀
+
+Written by Sabrina for Destination Home <3
+For Destination Home. Not for you to take.
+If you steal my code, and I'll know you did, I'll farm Reddit karma with screenshots of you.
+Think you can get away with it? Think again. You'll be cooked and served buddy.
 -->
 <!DOCTYPE html>
 <html lang="en" style="background-color: #191c1e;">
@@ -403,6 +408,7 @@
         <span id="filter-portable" class="filter-button button-filter-a">Portable</span>
         <span id="filter-scene" class="filter-button button-filter-a">Scene</span>
         <span id="filter-minigame" class="filter-button button-filter-a">Minigame</span>
+        <span id="filter-other" class="filter-button button-filter-a">Other (Misc.)</span>
     </div>
     <br>
         <div id="loading-spinner-elem" style="display: flex; align-items: center;">
@@ -603,6 +609,8 @@ function fetchFeatured() {
                         .replace('[DESC_PLACEHOLDER]', thisDescription);
                     document.getElementById('search-container').innerHTML += resultHTML;
                     setTimeout(removeImgLoading, 500, thisUuid);
+
+                    console.log("UUID: " + thisUuid + " | Name: " + searchResult.name + " | Type: " + itemTypeNormal + " | Meta_Type: " + searchResult.metadata.type + "Meta_Genders: " + searchResult.metadata.genders);
                 } else {
                     console.error('Request failed with status:', xhr.status);
                 }
@@ -640,6 +648,47 @@ function fetchData(searchQuery) {
 
         // loop through the search results
         var searchResults = JSON.parse(xhr.responseText).data.search;
+
+        // Rudimentary Filters Implementation
+        var filterCollection = [];
+        var filterTotal = 0;
+        if (document.getElementById('filter-clothing').classList.contains('button-filter-a-sel')) {
+            filterCollection.push("CLOTHING");
+            filterTotal++;
+        }
+        if (document.getElementById('filter-furniture').classList.contains('button-filter-a-sel')) {
+            filterCollection.push("FURNITURE");
+            filterTotal++;
+        }
+        if (document.getElementById('filter-portable').classList.contains('button-filter-a-sel')) {
+            filterCollection.push("PORTABLE");
+            filterTotal++;
+        }
+        if (document.getElementById('filter-scene').classList.contains('button-filter-a-sel')) {
+            filterCollection.push("SCENE");
+            filterTotal++;
+        }
+        if (document.getElementById('filter-minigame').classList.contains('button-filter-a-sel')) {
+            filterCollection.push("MINIGAME");
+            filterTotal++;
+        }
+        if (document.getElementById('filter-other').classList.contains('button-filter-a-sel')) {
+            filterCollection.push("OTHER");
+            filterTotal++;
+        }
+        var filterSearchResults = [];
+        if (filterTotal > 0) {
+          for (var i = 0; i < searchResults.length; i++) {
+            if (searchResults[i].metadata !== null && searchResults[i].metadata.type !== null) {
+              if (!filterCollection.includes(searchResults[i].metadata.type)) {
+              } else {
+                filterSearchResults.push(searchResults[i]);
+              }
+            }
+          }
+          searchResults = filterSearchResults;
+        }
+
         result_save = searchResults;
         results_loaded = 0;
         results_total = searchResults.length;
@@ -659,13 +708,17 @@ function fetchData(searchQuery) {
         // remove featured-objects-title
         document.getElementById('featured-objects-title').style.display = 'none';
 
-        // only show the first 20 results
-        for (var i = 0; i < 20; i++) {
-            results_loaded++;
+        var itemsLoaded = 0;
+        for (var i = 0; itemsLoaded < 20; i++) {
+          if (i >= searchResults.length) {
+            break; // Prevents infinite loop if searchResults has less than 20 non-null items
+          }
+          results_loaded++;
+          itemsLoaded++;
           var thisUuid = searchResults[i].uuid;
           var thisImage = searchResults[i].images.small;
           // remove [THUMBNAIL_ROOT] from thisImage
-            var thisImage = thisImage.replace('[THUMBNAIL_ROOT]', '');
+          var thisImage = thisImage.replace('[THUMBNAIL_ROOT]', '');
           var thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
 
           var thisDescription = "No description available.";
@@ -712,22 +765,22 @@ function fetchData(searchQuery) {
             var anim_ct = i + 1;
 
           // search up this UUID in results_save and return at which position it is
-            var resultIndex = result_save.findIndex(x => x.uuid === thisUuid) + 1;
+          var resultIndex = result_save.findIndex(x => x.uuid === thisUuid) + 1;
           var resultHTML = resultSkeleton
-            .replace('[IMAGE_PLACEHOLDER]', thisImage)
-            .replace('[NAME_PLACEHOLDER]', searchResults[i].name)
-            .replace('[UUID]', thisUuid)
-            .replace('[UUID2]', thisUuid)
-            .replace('[UUID3]', thisUuid)
-            .replace('[UUID4]', thisUuid)
-            .replace('[UUID5]', thisUuid)
-            .replace('[GENDER_ICON]', gender_icon)
-            .replace('[ITEM_CLASS]', itemClass)
-            .replace('[ITEM_TYPE]', itemTypeNormal)
-            .replace('[ITEM_TYPE_2]', itemClass)
-            .replace('[INIT_ANIM]', 'init-element-anim-'+anim_ct)
-            .replace('[HEADER_PLACEHOLDER]', 'Result '+resultIndex)
-            .replace('[DESC_PLACEHOLDER]', thisDescription);
+          .replace('[IMAGE_PLACEHOLDER]', thisImage)
+          .replace('[NAME_PLACEHOLDER]', searchResults[i].name)
+          .replace('[UUID]', thisUuid)
+          .replace('[UUID2]', thisUuid)
+          .replace('[UUID3]', thisUuid)
+          .replace('[UUID4]', thisUuid)
+          .replace('[UUID5]', thisUuid)
+          .replace('[GENDER_ICON]', gender_icon)
+          .replace('[ITEM_CLASS]', itemClass)
+          .replace('[ITEM_TYPE]', itemTypeNormal)
+          .replace('[ITEM_TYPE_2]', itemClass)
+          .replace('[INIT_ANIM]', 'init-element-anim-'+anim_ct)
+          .replace('[HEADER_PLACEHOLDER]', 'Result '+resultIndex)
+          .replace('[DESC_PLACEHOLDER]', thisDescription);
           document.getElementById('search-container').innerHTML += resultHTML;
           setTimeout(removeImgLoading, 500, thisUuid);
         }
