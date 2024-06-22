@@ -295,6 +295,7 @@
 
 .frosted-alt {
 	background-color: rgb(9 11 26 / 71%);
+  -webkit-backdrop-filter: blur(14px);
 	backdrop-filter: blur(14px);
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 	color: white;
@@ -379,7 +380,7 @@
     <div class="container cutsie-anim-fast">
       <div class="field has-addons">
         <div class="control is-expanded">
-          <input class="input" type="text" placeholder="Names, Keywords, Brands, etc.">
+          <input id="search-input" class="input" type="text" placeholder="Names, Keywords, Brands, etc.">
         </div>
         <div class="control">
           <a id="search-btn" class="button is-info" style="background-color: #24394b;">
@@ -433,6 +434,12 @@
   </footer>
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 <script>
+document.getElementById('search-input').addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    document.getElementById('search-btn').click();
+  }
+});
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
