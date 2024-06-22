@@ -285,11 +285,13 @@
 }
 
 .frosted-glass {
-	background-color: rgb(19 29 45 / 71%);
-	backdrop-filter: blur(14px);
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-	color: white;
+    background-color: rgb(19 29 45 / 71%);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    color: white;
 }
+
 
 .frosted-alt {
 	background-color: rgb(9 11 26 / 71%);
@@ -1073,11 +1075,11 @@ function objectView(uuid) {
           'DNT': '1',
           'Origin': 'https://catalogue.destinationhome.live'
         };
-        
+
         const similarSearchBodyData = JSON.stringify({
           query: "{\n  search(query:\"" + objectNameLowercase + "\", locale:DEFAULT) {\n    uuid\ntype\nname\ndescription\nimages{\nsmall\n}\nmetadata {\ntype\ngenders\n}\n  }\n}"
         });
-        
+
         fetch(similarSearchUrl, {
           method: 'POST',
           headers: similarSearchHeaders,
@@ -1102,10 +1104,10 @@ function objectView(uuid) {
         
           const similarSearchResult1 = similarSearchResults[similarSearchResultsRandom];
           const similarSearchResult2 = similarSearchResults[similarSearchResultsRandom2];
-          
+
           const similarSearchResult1Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult1.uuid + "/" + similarSearchResult1.images.small.replace('[THUMBNAIL_ROOT]', '');
           const similarSearchResult2Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult2.uuid + "/" + similarSearchResult2.images.small.replace('[THUMBNAIL_ROOT]', '');
-          
+
           const similarObjHTML1 = similarObjSkeleton
             .replace('[SIM_OBJ_IMG]', similarSearchResult1Image)
             .replace('[SIM_OBJ_NAME]', similarSearchResult1.name)
@@ -1116,7 +1118,7 @@ function objectView(uuid) {
             .replace('[SIM_OBJ_NAME]', similarSearchResult2.name)
             .replace('[SIM_OBJ_UUID]', similarSearchResult2.uuid)
             .replace('[SIM_OBJ_TYPE]', similarSearchResult2.type);
-          
+
           const combinedHTML = similarObjHTML1 + similarObjHTML2;
           document.getElementById('similar-obj-dyn-cont').innerHTML = combinedHTML;
         })
