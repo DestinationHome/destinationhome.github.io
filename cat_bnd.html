@@ -1,0 +1,448 @@
+<!--
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡴⣶⣷⣦⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣿⣿⣿⣿⣿⡎⠙⠻⢿⣶⣄⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣿⡿⢿⣿⠉⠀⠀⠀⠀⠉⠻⣿⣦⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣶⣿⣿⣿⣿⣿⣾⣿⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣦⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⠟⢻⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣷⡀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣥⡀⢸⣿⡿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣷⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣧⣸⣿⣧⠘⢿⣦⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡇
+⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⡏⠻⣿⣄⠀⠙⢷⣄⠀⠀⠀⠀⠀⠀⣿⣿⣿
+⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⠁⠀⢹⣿⣿⣶⣦⣽⣳⠄⠀⠀⠀⠀⣿⣿⣿
+⠀⠀⠀⠀⠀⠀⣰⣿⣿⡿⣿⣿⣿⠀⠀⠈⣿⣷⡀⠉⠛⢿⣷⡀⠀⠀⢀⣿⣿⡿
+⠀⠀⠀⠀⠀⢠⣿⣿⠟⢁⣸⣿⣿⣀⣠⣾⣿⣿⣿⣦⡀⠀⠉⢹⠄⠀⣼⣿⣿⡇
+⠘⡄⠀⠀⠀⣼⣿⣿⣿⣿⣿⢿⣿⣿⠉⠉⠀⠀⠀⠉⠻⠀⠀⠐⠀⣼⣿⣿⡟⠀
+⠀⠘⢆⠀⠀⠘⠛⠋⠉⠀⠀⠀⢿⣿⡆⠀⠀⠀⠀⠀⠈⠀⠀⢀⣼⣿⣿⡟⠀⠀
+⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠸⣿⡇⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⠋⠀⠀⠀
+⠀⠀⠀⠀⠈⠻⣦⣄⣀⠀⠀⠀⠀⣿⣷⠀⠀⢀⣀⣤⣾⣿⣿⡿⠛⠁⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⣶⣶⣾⣿⣾⣿⣿⣿⣿⠿⠛⠉⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⣿⣿⡉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡟⠀⠀⠀⠀
+-->
+<!DOCTYPE html>
+<html lang="en" style="background-color: #191c1e;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object Catalogue</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<style>
+.subtitle {
+	display: flex;
+	align-items: center;
+}
+
+.subtitle img {
+	margin-right: 10px;
+	/* Adjust as needed */
+	border-radius: 10px;
+}
+
+.notification {
+	display: none;
+}
+
+.notification.show {
+	display: block;
+	animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+	0%,
+	100% {
+		opacity: 0;
+	}
+
+	50% {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+/* create css animation thats a loading skeleton for lazyloadbg class */
+.lazyloadbg {
+	background-color: #f0f0f0;
+	background-image: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: loading 1.4s infinite linear;
+}
+
+@keyframes loading {
+	0% {
+		background-position: 200% 0;
+	}
+
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+.card-container {
+	display: flex;
+	flex-wrap: wrap;
+	/* Ensures items wrap to the next row if there isn't enough space */
+	justify-content: space-between;
+	/* Adjust as needed */
+}
+
+.isRewardCard {
+	background: linear-gradient(#fbcece, rgb(249 186 186 / 79%));
+	background-size: cover;
+	background-position: center;
+	background-blend-mode: overlay;
+}
+
+.card {
+	height: 90%;
+	/* make sure the bottom corners are NOT rounded but keep the top ones */
+	border-radius: 10px 10px 0 0;
+}
+
+.column {
+	margin-bottom: 50px;
+}
+
+.img-lazyload {
+	animation: fadeIn 1s;
+}
+
+.button-filter-a {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #3c4042;
+	color: white;
+	cursor: pointer;
+	font-size: 12px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	user-select: none;
+}
+
+.button-filter-a-sel {
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #4b626e;
+	color: white;
+	cursor: pointer;
+	font-size: 12px;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	user-select: none;
+}
+
+#container-2 {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#item-detail-list {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+	display: none;
+}
+
+#item-detail-content {
+	padding: 10px;
+}
+
+.init-element-anim-1 {
+	animation: fadeInUp;
+	animation-duration: 0.3s;
+}
+
+.init-element-anim-2 {
+	animation: fadeInUp;
+	animation-duration: 0.4s;
+}
+
+.init-element-anim-3 {
+	animation: fadeInUp;
+	animation-duration: 0.5s;
+}
+
+.init-element-anim-4 {
+	animation: fadeInUp;
+	animation-duration: 0.6s;
+}
+
+.init-element-anim-5 {
+	animation: fadeInUp;
+	animation-duration: 0.7s;
+}
+
+.loading-text-color {
+	color: #191c1e;
+}
+
+.loading-text-anim {
+	animation: fadeInUp;
+	animation-duration: 0.3s;
+}
+
+#gradient-gif-anim {
+	background-image: url('https://media2.giphy.com/media/FyoaJE2iah7WYeyxWr/giphy.gif');
+	background-size: cover;
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	display: inline-block;
+	animation: fadeIn 1s;
+}
+
+.card-anim-component {
+	transition: transform 0.3s ease;
+}
+
+.card-anim-component:hover {
+	transform: scale(1.02);
+}
+
+.isFeaturedItem {
+	background: linear-gradient(#fafafa, rgb(249 186 186 / 79%));
+	background-size: cover;
+	background-position: center;
+	background-blend-mode: overlay;
+}
+
+.object-container {
+	max-width: 800px;
+	padding: 20px;
+}
+
+.object-details {
+	display: flex;
+	align-items: center;
+}
+
+.object-image {
+	flex: 1;
+}
+
+.object-image img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 5px;
+}
+
+.object-info {
+	flex: 2;
+	padding-left: 20px;
+}
+
+.object-title {
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.object-type,
+.object-premium-reward,
+.object-description,
+.object-obtain-instructions,
+.object-age-rating {
+	margin-bottom: 10px;
+	font-size: 16px;
+}
+
+.object-premium-reward {
+	color: #007bff;
+}
+
+.object-age-rating {
+	color: #ff0000;
+}
+
+.fab {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background-color: #007bff;
+	color: #fff;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 50px;
+	font-size: 24px;
+	cursor: pointer;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.frosted-glass {
+	background-color: rgb(19 29 45 / 71%);
+	backdrop-filter: blur(14px);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.frosted-alt {
+	background-color: rgb(9 11 26 / 71%);
+	backdrop-filter: blur(14px);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+</style>
+<body style="background-color: #191c1e;">
+<!-- Modal Details -->
+<div id="modal-details" class="modal" style="animation: fadeInUp; animation-duration: 0.2s;">
+    <!--<div class="modal-background" style="animation: fadeIn; animation-duration: 1s;"></div>-->
+    <div class="modal-card" style="border: 2px solid #d1d1d1; border-radius: 20px;">
+      <header class="modal-card-head frosted-alt">
+        <p class="modal-card-title" style="color: white;">Object Details</p>
+        <button id="close-modal" class="delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body frosted-glass">
+        <!-- Content ... -->
+        <div class="object-container">
+          <div class="object-details">
+              <div class="object-image">
+                  <img src="resc/gray.webp" alt="Object Image" style="animation: fadeIn; animation-duration: 0.5s;">
+              </div>
+              <div class="object-info">
+                  <h1 class="object-title" style="animation: fadeIn; animation-duration: 0.5s;">Object Name</h1>
+                  <p class="object-type" style="animation: fadeIn; animation-duration: 0.5s;">Type: Type of Object</p>
+                  <!--<p class="object-premium-reward">Premium/Reward</p>-->
+                  <p class="object-description" style="animation: fadeIn; animation-duration: 0.5s;">Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet eleifend nunc.</p>
+                  <p class="object-obtain-instructions" style="animation: fadeIn; animation-duration: 0.5s;">How to Obtain: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet eleifend nunc.</p>
+                  <p class="object-age-rating" style="animation: fadeIn; animation-duration: 0.5s;">Age Rating: 18+</p>
+              </div>
+          </div>
+      </div>
+      <div class="object-container">
+        <h1 class="object-title" style="animation: fadeIn; animation-duration: 0.5s;">Similar Objects</h1>
+        <div class="columns is-multiline is-mobile" id="similar-objects">
+          <!-- Sample Object -->
+          <div id="saved-item" style="animation: fadeInLeft; width: 100%; margin-bottom: 10px; background-color: rgb(9 11 26 / 71%); border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center;">
+                <img id="saved-item-img" class="preview" src="resc/gray.webp" width="50" height="50" style="animation: fadeIn; animation-duration: 2s; border-radius: 10px;">
+                <p style="margin-left: 10px; animation: fadeIn; animation-duration: 0.5s;"><b id="saved-item-name-">Name</b><br><span style="font-size: 13px;">Item</span></p>
+            </div>
+            <div>
+                <!-- Create View Button -->
+                <button class="button is-info" style="background-color: #24394b; animation: fadeIn; animation-duration: 0.5s;">View</button>
+            </div>
+        </div>
+        </div>
+      </div>
+        <!-- Content End-->
+      </section>
+      <footer class="modal-card-foot frosted-alt">
+        <div class="buttons">
+          <button onclick="" id="obj-detail-save" class="button">Save</button>
+          <button onclick="" id="obj-detail-copy" class="button">Copy UUID</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+<!-- Modal List -->
+<div id="modal-list" class="modal" style="animation: fadeInUp; animation-duration: 0.2s;">
+    <div class="modal-background" style="animation: fadeIn; animation-duration: 1s;"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Saved Objects</span></p>
+        <button id="close-modal" class="delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <!-- Replaced Body -->
+      </section>
+      <footer class="modal-card-foot">
+        <div class="buttons">
+          <button onclick="clearSavedItems();" class="button"><i class="fa-solid fa-trash"></i>&nbsp;Clear List</button>
+          <button onclick="exportList();" class="button"><i class="fa-solid fa-file-export"></i>&nbsp;Export List</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!-- Header -->
+  <section class="hero is-primary" style="background-color: #191c1e; margin-bottom: -40px; margin-top: -10px;">
+    <div class="hero-body">
+      <div class="container">
+        <!--<h1 class="title">
+        </h1>-->
+        <h3 class="subtitle">
+            <img src="resc/logo.svg" width="35px" style="border-radius: 10px;">
+            <span id="ahhtitle">Destination Home Object Catalogue <span style="font-size: 10px; color: gray;"><i>BETA</i></span></span>
+        </h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Bar -->
+  <section class="section" style="margin-top: -55px; margin-bottom: -53px;">
+    <div class="container cutsie-anim-fast">
+      <div class="field has-addons">
+        <div class="control is-expanded">
+          <input class="input" type="text" placeholder="Names, Keywords, Brands, etc.">
+        </div>
+        <div class="control">
+          <a id="search-btn" class="button is-info" style="background-color: #24394b;">
+            Search 🔍
+          </a>
+        </div>
+      </div>
+      <div id="misc-pages" class="cutsie-anim" style="margin-bottom: 10px;">
+        <!-- Create two buttons that don't exceed the length of the search bar -->
+        <span id="saved-objects-list-button" onclick="toggleList()" class="button is-info saved-object-button" style="background-color: #24394b; margin-right: 10px;">Saved Objects</span>
+        <!--<span class="button is-info" style="background-color: #24394b;">History</span>-->
+      </div>
+      <div id="container-2" class="cutsie-anim">
+        <span id="filter-clothing" class="filter-button button-filter-a">Clothing</span>
+        <span id="filter-furniture" class="filter-button button-filter-a">Furniture</span>
+        <span id="filter-portable" class="filter-button button-filter-a">Portable</span>
+        <span id="filter-scene" class="filter-button button-filter-a">Scene</span>
+        <span id="filter-minigame" class="filter-button button-filter-a">Minigame</span>
+    </div>
+    <br>
+        <div id="loading-spinner-elem" style="display: flex; align-items: center;">
+            <img src="https://datapublic.uam.es/open/img-bi/spinner.gif" width="24px" id="loading-spinner" style="display: none;">
+            <span id="loading-text" class="loading-text-color" style="display: none; margin-left: 10px;">Hang tight...</span>
+        </div>
+        <p id="result-amount"></p>
+        <p id="no-result-text" style="display: none;">No results found 😔</p>
+    </div>
+  </section>
+
+  <section class="section" id="search-results">
+    <div class="container">
+        <div id="featured-objects-title">
+            <h2 class="subtitle" style="font-size: 24px; color: white;">
+                ✨ <span id="gradient-gif-anim">Featured Objects</span>
+            </h2>
+            <br>
+        </div>
+      <div class="columns is-multiline is-mobile" id="search-container">
+        <!-- Featured Objects -->
+
+        <!-- Featured Objects End-->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div class="fab" id="fab" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></div>
+  <footer class="footer" style="background-color: #25282A; color: white; padding: 20px 0;">
+    <div class="content has-text-centered">
+      <p style="font-size: 16px;">&copy; Destination Home <br>Created with ❤️ by <span style="font-weight: bold;">Zeph</span> x <span style="font-weight: bold;">Sabrinica</span> ( and <i>Mari</i> )</p>
+    </div>
+  </footer>
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<script src="bundle.js"></script>
+</body>
+</html>
