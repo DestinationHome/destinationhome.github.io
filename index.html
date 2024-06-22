@@ -232,7 +232,7 @@
 
 .object-details {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 }
 
 .object-image {
@@ -320,6 +320,7 @@
           <div class="object-details">
               <div class="object-image">
                   <img src="resc/gray.webp" alt="Object Image" style="animation: fadeIn; animation-duration: 0.5s;">
+                  <p class="object-age-rating" style="animation: fadeIn; animation-duration: 0.5s;">Age Rating: 18+</p>
               </div>
               <div class="object-info">
                   <h1 class="object-title" style="animation: fadeIn; animation-duration: 0.5s;">Object Name</h1>
@@ -327,12 +328,12 @@
                   <!--<p class="object-premium-reward">Premium/Reward</p>-->
                   <p class="object-description" style="animation: fadeIn; animation-duration: 0.5s;">Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet eleifend nunc.</p>
                   <p class="object-obtain-instructions" style="animation: fadeIn; animation-duration: 0.5s;">How to Obtain: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet eleifend nunc.</p>
-                  <p class="object-age-rating" style="animation: fadeIn; animation-duration: 0.5s;">Age Rating: 18+</p>
+                  <!--<p class="object-age-rating" style="animation: fadeIn; animation-duration: 0.5s;">Age Rating: 18+</p>-->
               </div>
           </div>
       </div>
       <div class="object-container">
-        <h1 class="object-title" style="animation: fadeIn; animation-duration: 0.5s; margin-left: -10px; margin-bottom: 17px;">Similar Objects</h1>
+        <h1 class="object-title" style="font-size: 17px; animation: fadeIn; animation-duration: 0.5s; margin-left: -10px; margin-bottom: 17px;">Similar Objects</h1>
         <div id="similar-obj-dyn-cont"></div>
       </div>
         <!-- Content End-->
@@ -541,12 +542,6 @@ function fetchFeatured() {
         xhr.open('POST', url, true);
 
         var headers = {
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Connection': 'keep-alive',
-            'DNT': '1',
-            'Origin': 'https://catalogue.destinationhome.live'
         };
 
         for (var key in headers) {
@@ -628,12 +623,6 @@ function fetchData(searchQuery) {
   xhr.open('POST', url, true);
 
   var headers = {
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Connection': 'keep-alive',
-    'DNT': '1',
-    'Origin': 'https://catalogue.destinationhome.live'
   };
 
   for (var key in headers) {
@@ -699,10 +688,10 @@ function fetchData(searchQuery) {
             }
 
             if (gender == "FEMALE") {
-                gender_icon = '<img src="female.png" width="50px">';
+                gender_icon = '<img src="resc/female.png" width="50px">';
             }
             if (gender == "MALE") {
-                gender_icon = '<img src="male.png" width="50px">';
+                gender_icon = '<img src="resc/male.png" width="50px">';
             }
 
             var itemType = searchResults[i].type;
@@ -854,10 +843,10 @@ function loadMoreResults() {
             }
 
             if (gender == "FEMALE") {
-                gender_icon = '<img src="female.png" width="50px">';
+                gender_icon = '<img src="resc/female.png" width="50px">';
             }
             if (gender == "MALE") {
-                gender_icon = '<img src="male.png" width="50px">';
+                gender_icon = '<img src="resc/male.png" width="50px">';
             }
 
             var itemType = result_save[i].type;
@@ -996,12 +985,6 @@ function objectView(uuid) {
   xhr.open('POST', url, true);
 
   var headers = {
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Connection': 'keep-alive',
-    'DNT': '1',
-    'Origin': 'https://catalogue.destinationhome.live'
   };
 
   for (var key in headers) {
@@ -1033,27 +1016,27 @@ function objectView(uuid) {
           var objectMetadata = object.metadata;
         }
 
-        var ageRatingImage = "<img height='40' src='resc/E.webp'>";
+        var ageRatingImage = "<img width='130' src='resc/E.webp'>";
         if (objectAgeRating >= 3) {
-          ageRatingImage = "<img height='40' src='resc/E.webp'>";
+          ageRatingImage = "<img width='130' src='resc/E.webp'>";
         }
         if (objectAgeRating >= 7) {
-          ageRatingImage = "<img height='40' src='resc/E.webp'>";
+          ageRatingImage = "<img width='130' src='resc/E.webp'>";
         }
         if (objectAgeRating >= 12) {
-          ageRatingImage = "<img height='40' src='resc/T.webp'>";
+          ageRatingImage = "<img width='130' src='resc/T.webp'>";
         }
         if (objectAgeRating >= 16) {
-          ageRatingImage = "<img height='40' src='resc/M.webp'>";
+          ageRatingImage = "<img width='130' src='resc/M.webp'>";
         }
         if (objectAgeRating >= 18) {
-          ageRatingImage = "<img height='40' src='resc/AO.webp'>";
+          ageRatingImage = "<img width='130' src='resc/AO.webp'>";
         }
 
         var obtainInstructions = 'No obtain instructions found.';
         var objectNameLowercase = objectName.toLowerCase();
         if (objectNameLowercase.includes('bundle') || objectNameLowercase.includes('pack') || objectNameLowercase.includes('set')) {
-          obtainInstructions = 'This item is a bundle, pack or set. It most likely cannot be obtained separately.';
+          obtainInstructions = 'This item is most likely a bundle, pack or set. If it is, it cannot be added to your account.';
         }
 
         // in object-description remove [#Legal] and replace \n with <br>
@@ -1077,14 +1060,12 @@ function objectView(uuid) {
 
         // Fetch similar objects and display them
         document.getElementById('similar-obj-dyn-cont').innerHTML = '';
+
+        // Animate a text within similar-obj-dyn-cont like "Fetching similar objects..." but with like animated dots and cuteness
+        document.getElementById('similar-obj-dyn-cont').innerHTML = '<img src="https://datapublic.uam.es/open/img-bi/spinner.gif" width="24px" style="margin-right: -20px;">';
+
         const similarSearchUrl = 'https://catalogue.destinationhome.live';
         const similarSearchHeaders = {
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Connection': 'keep-alive',
-          'DNT': '1',
-          'Origin': 'https://catalogue.destinationhome.live'
         };
 
         const similarSearchBodyData = JSON.stringify({
@@ -1228,12 +1209,6 @@ function populateSavedItems() {
       xhr.open('POST', url, true);
 
       var headers = {
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Connection': 'keep-alive',
-        'DNT': '1',
-        'Origin': 'https://catalogue.destinationhome.live'
       };
 
       for (var key in headers) {
