@@ -24,7 +24,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Object Catalogue</title>
+  <title>Destination Home Object Catalogue</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -1073,11 +1073,11 @@ function objectView(uuid) {
           'DNT': '1',
           'Origin': 'https://catalogue.destinationhome.live'
         };
-
+        
         const similarSearchBodyData = JSON.stringify({
           query: "{\n  search(query:\"" + objectNameLowercase + "\", locale:DEFAULT) {\n    uuid\ntype\nname\ndescription\nimages{\nsmall\n}\nmetadata {\ntype\ngenders\n}\n  }\n}"
         });
-
+        
         fetch(similarSearchUrl, {
           method: 'POST',
           headers: similarSearchHeaders,
@@ -1092,14 +1092,20 @@ function objectView(uuid) {
         .then(similarSearchResponse => {
           const similarSearchResults = similarSearchResponse.data.search;
           const similarSearchResultsLength = similarSearchResults.length;
-          const similarSearchResultsRandom = Math.floor(Math.random() * similarSearchResultsLength);
-          const similarSearchResultsRandom2 = Math.floor(Math.random() * similarSearchResultsLength);
-          const similarSearchResult1 = similarSearchResults[similarSearchResultsRandom];
-          const similarSearchResult2 = similarSearchResults[similarSearchResultsRandom];
         
+          // Ensure the two random indices are different
+          let similarSearchResultsRandom = Math.floor(Math.random() * similarSearchResultsLength);
+          let similarSearchResultsRandom2;
+          do {
+            similarSearchResultsRandom2 = Math.floor(Math.random() * similarSearchResultsLength);
+          } while (similarSearchResultsRandom2 === similarSearchResultsRandom);
+        
+          const similarSearchResult1 = similarSearchResults[similarSearchResultsRandom];
+          const similarSearchResult2 = similarSearchResults[similarSearchResultsRandom2];
+          
           const similarSearchResult1Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult1.uuid + "/" + similarSearchResult1.images.small.replace('[THUMBNAIL_ROOT]', '');
           const similarSearchResult2Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult2.uuid + "/" + similarSearchResult2.images.small.replace('[THUMBNAIL_ROOT]', '');
-        
+          
           const similarObjHTML1 = similarObjSkeleton
             .replace('[SIM_OBJ_IMG]', similarSearchResult1Image)
             .replace('[SIM_OBJ_NAME]', similarSearchResult1.name)
@@ -1110,7 +1116,7 @@ function objectView(uuid) {
             .replace('[SIM_OBJ_NAME]', similarSearchResult2.name)
             .replace('[SIM_OBJ_UUID]', similarSearchResult2.uuid)
             .replace('[SIM_OBJ_TYPE]', similarSearchResult2.type);
-        
+          
           const combinedHTML = similarObjHTML1 + similarObjHTML2;
           document.getElementById('similar-obj-dyn-cont').innerHTML = combinedHTML;
         })
