@@ -347,6 +347,7 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
         <div class="buttons">
           <button onclick="" id="obj-detail-save" class="button">Save</button>
           <button onclick="" id="obj-detail-copy" class="button">Copy UUID</button>
+          <button onclick="" id="obj-detail-copy-url" class="button">Share URL</button>
         </div>
       </footer>
     </div>
@@ -996,6 +997,29 @@ document.addEventListener('error', function(e) {
     }
 }, true);
 
+function objectURLCopy(uuid) {
+    // turn the uuid into an url safe encrypted string
+    var uuidBTOA = encodeURIComponent(btoa(uuid));
+    var url = 'https://objects.destinationhome.live?object=' + uuidBTOA;
+    var copyText = document.createElement('textarea');
+    copyText.value = url;
+    document.body.appendChild(copyText);
+    copyText.select();
+    document.execCommand('copy');
+    document.body.removeChild(copyText);
+    var notyf = new Notyf();
+    notyf.success('URL copied to clipboard!');
+}
+
+function checkURL() {
+    var url = window.location.href;
+    var urlSplit = url.split('=');
+    if (urlSplit.length > 1) {
+        var uuid = atob(decodeURIComponent(urlSplit[1]));
+        objectView(uuid);
+    }
+}
+
 function objectCopy(uuid, type) {
     if (type == "isRewardCard") {
         var notyf = new Notyf();
@@ -1110,7 +1134,7 @@ function objectView(uuid) {
         // get obj-detail-save and change onclick to objectSave(uuid)
         document.getElementById('obj-detail-save').setAttribute('onclick', 'objectSave("'+uuid+'")');
         document.getElementById('obj-detail-copy').setAttribute('onclick', 'objectCopy("'+uuid+'", "'+objectType+'")');
-
+        document.getElementById('obj-detail-copy-url').setAttribute('onclick', 'objectURLCopy("'+uuid+'")');
         // Fetch similar objects and display them
         document.getElementById('similar-obj-dyn-cont').innerHTML = '';
 
@@ -1414,6 +1438,7 @@ closeModals.forEach(function(element) {
 });
 
 fetchFeatured();
+checkURL();
   </script>
 </body>
 </html>
