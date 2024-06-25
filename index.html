@@ -373,6 +373,7 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
       <footer class="modal-card-foot">
         <div class="buttons">
           <button onclick="clearSavedItems();" class="button"><i class="fa-solid fa-trash"></i>&nbsp;Clear List</button>
+          <button onclick="importList();" class="button"><i class="fa-solid fa-file-import"></i>&nbsp;Import List</button>
           <button onclick="exportList();" class="button"><i class="fa-solid fa-file-export"></i>&nbsp;Export List</button>
         </div>
       </footer>
@@ -1610,7 +1611,6 @@ function removeSpecificItemFromList(uuid) {
 }
 
 function exportList() {
-  // save as TXT file where each UUID is each own line with a comma except the last
   var savedItems = localStorage.getItem('savedItems');
   if (savedItems == null) {
     savedItems = [];
@@ -1639,6 +1639,63 @@ function exportList() {
     var notyf = new Notyf();
     notyf.error('No saved items to export!');
   }
+}
+
+function importList() {
+  importListReplace();
+}
+
+function importListReplace() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.txt';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function() {
+      var text = reader.result;
+      var textSplit = text.split(',\n');
+      localStorage.setItem('savedItems', JSON.stringify(textSplit));
+      var notyf = new Notyf();
+      notyf.success('Replaced saved items!');
+      showSavedItems();
+      populateSavedItems();
+    };
+  };
+  input.click();
+}
+
+function importListAdd() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.txt';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function() {
+      var text = reader.result;
+      var savedItems = localStorage.getItem('savedItems');
+      if (savedItems == null) {
+        savedItems = [];
+      } else {
+        savedItems = JSON.parse(savedItems);
+      }
+      var textSplit = text.split(',\n');
+      textSplit.forEach(function(item) {
+        if (!savedItems.includes(item)) {
+          savedItems.push(item);
+        }
+      });
+      localStorage.setItem('savedItems', JSON.stringify(savedItems));
+      var notyf = new Notyf();
+      notyf.success('Imported saved items!');
+      showSavedItems();
+      populateSavedItems();
+    };
+  };
+  input.click();
 }
 
 function handleFilterClick(event) {
