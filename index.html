@@ -414,6 +414,7 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
         <span id="filter-scene" class="filter-button button-filter-a">Scene</span>
         <span id="filter-minigame" class="filter-button button-filter-a">Minigame</span>
         <span id="filter-other" class="filter-button button-filter-a">Other (Misc.)</span>
+        <span id="filter-rewards" class="filter-button button-filter-a">Hide Rewards & Bundles</span>
     </div>
     <br>
         <div id="loading-spinner-elem" style="display: flex; align-items: center;">
@@ -828,6 +829,7 @@ function fetchData(searchQuery) {
         // Rudimentary Filters Implementation
         var filterCollection = [];
         var filterTotal = 0;
+        var hideReward = false;
         if (document.getElementById('filter-clothing').classList.contains('button-filter-a-sel')) {
             filterCollection.push("CLOTHING");
             filterTotal++;
@@ -852,6 +854,9 @@ function fetchData(searchQuery) {
             filterCollection.push("OTHER");
             filterTotal++;
         }
+        if (document.getElementById('filter-rewards').classList.contains('button-filter-a-sel')) {
+            hideReward = true;
+        }
         var filterSearchResults = [];
         if (filterTotal > 0) {
           for (var i = 0; i < searchResults.length; i++) {
@@ -859,6 +864,21 @@ function fetchData(searchQuery) {
               if (!filterCollection.includes(searchResults[i].metadata.type)) {
               } else {
                 filterSearchResults.push(searchResults[i]);
+              }
+            }
+          }
+          searchResults = filterSearchResults;
+        }
+
+        if (hideReward) {
+          for (var i = 0; i < searchResults.length; i++) {
+            console.log(searchResults[i].type);
+            if (searchResults[i].type != "REWARD") {
+              if (searchResults[i].name != null) {
+                if (searchResults[i].name.toLowerCase().includes("bundle") || searchResults[i].name.toLowerCase().includes("pack") || searchResults[i].name.toLowerCase().includes("set")) {
+                } else {
+                  filterSearchResults.push(searchResults[i]);
+                }
               }
             }
           }
