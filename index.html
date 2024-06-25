@@ -478,6 +478,10 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
 <script>
 document.getElementById('search-input').addEventListener('keypress', function(event) {
   if (event.key === 'Enter') {
+    if (document.getElementById('search-input').value.trim() === '') {
+      window.location.href = 'https://objects.destinationhome.live';
+      return;
+    }
     event.preventDefault();
     document.getElementById('search-btn').click();
   }
@@ -605,6 +609,10 @@ var results_total = 0;
 var loadingtime = 0;
 
 document.getElementById('search-btn').addEventListener('click', function() {
+  if (document.getElementById('search-input').value.trim() === '') {
+    window.location.href = 'https://objects.destinationhome.live';
+    return;
+  }
   var searchQuery = document.querySelector('.input').value;
   fetchData(searchQuery);
 });
@@ -673,7 +681,7 @@ function showCollection(id) {
             isItemAllowedToCopy = false;
           }
           if (searchResult.name != null) {
-            if (searchResult.name.toLowerCase().includes("bundle") || searchResult.name.toLowerCase().includes("pack") || searchResult.name.toLowerCase().includes("set")) {
+            if (searchResult.name.toLowerCase().includes("bundle") || searchResult.name.toLowerCase().includes("pack") || searchResult.name.toLowerCase().includes("set") || searchResult.name.toLowerCase().includes("collection")) {
               itemClass = "isRewardCard";
               isItemAllowedToCopy = false;
             }
@@ -707,20 +715,6 @@ function showCollection(id) {
 
       xhr.send(bodyData);
   });
-}
-
-function showToast() {
-  var toast = document.getElementById('toast');
-  if (toast) {
-    toast.classList.add('show');
-  }
-}
-
-function hideToast() {
-  var toast = document.getElementById('toast');
-  if (toast) {
-    toast.classList.remove('show');
-  }
 }
 
 function fetchFeatured() {
@@ -767,7 +761,7 @@ function fetchFeatured() {
                     }
                 
                     if (searchResult.name != null) {
-                        if (searchResult.name.toLowerCase().includes("bundle") || searchResult.name.toLowerCase().includes("pack") || searchResult.name.toLowerCase().includes("set")) {
+                        if (searchResult.name.toLowerCase().includes("bundle") || searchResult.name.toLowerCase().includes("pack") || searchResult.name.toLowerCase().includes("set") || searchResult.name.toLowerCase().includes("collection")) {
                             itemClass = "isRewardCard";
                             isItemAllowedToCopy = false;
                         }
@@ -876,7 +870,7 @@ function fetchData(searchQuery) {
             console.log(searchResults[i].type);
             if (searchResults[i].type != "REWARD") {
               if (searchResults[i].name != null) {
-                if (searchResults[i].name.toLowerCase().includes("bundle") || searchResults[i].name.toLowerCase().includes("pack") || searchResults[i].name.toLowerCase().includes("set")) {
+                if (searchResults[i].name.toLowerCase().includes("bundle") || searchResults[i].name.toLowerCase().includes("pack") || searchResults[i].name.toLowerCase().includes("set") || searchResults[i].name.toLowerCase().includes("collection")) {
                 } else {
                   filterSearchResults.push(searchResults[i]);
                 }
@@ -953,7 +947,7 @@ function fetchData(searchQuery) {
             }
 
             if (searchResults[i].name != null) {
-            if (searchResults[i].name.toLowerCase().includes("bundle") || searchResults[i].name.toLowerCase().includes("pack") || searchResults[i].name.toLowerCase().includes("set")) {
+            if (searchResults[i].name.toLowerCase().includes("bundle") || searchResults[i].name.toLowerCase().includes("pack") || searchResults[i].name.toLowerCase().includes("set") || searchResults[i].name.toLowerCase().includes("collection")) {
                 itemClass = "isRewardCard";
                 isItemAllowedToCopy = false;
             }}
@@ -1107,7 +1101,7 @@ function loadMoreResults() {
             }
 
             if (result_save[i].name != null) {
-                if (result_save[i].name.toLowerCase().includes("bundle") || result_save[i].name.toLowerCase().includes("pack") || result_save[i].name.toLowerCase().includes("set")) {
+                if (result_save[i].name.toLowerCase().includes("bundle") || result_save[i].name.toLowerCase().includes("pack") || result_save[i].name.toLowerCase().includes("set") || result_save[i].name.toLowerCase().includes("collection")) {
                     itemClass = "isRewardCard";
                     isItemAllowedToCopy = false;
                 }
@@ -1334,7 +1328,7 @@ function objectView(uuid) {
 
         var obtainInstructions = 'No obtain instructions found.';
         var objectNameLowercase = objectName.toLowerCase();
-        if (objectNameLowercase.includes('bundle') || objectNameLowercase.includes('pack') || objectNameLowercase.includes('set')) {
+        if (objectNameLowercase.includes('bundle') || objectNameLowercase.includes('pack') || objectNameLowercase.includes('set') || objectNameLowercase.includes('collection')) {
           obtainInstructions = 'This item is most likely a bundle, pack or set. If it is, it cannot be added to your account.';
         }
 
@@ -1389,8 +1383,6 @@ function objectView(uuid) {
         document.getElementById('similar-obj-dyn-cont').innerHTML = '<img src="https://datapublic.uam.es/open/img-bi/spinner.gif" width="24px" style="margin-right: -20px;">';
 
         const similarSearchUrl = 'https://catalogue.destinationhome.live';
-        const similarSearchHeaders = {
-        };
 
         const similarSearchBodyData = JSON.stringify({
           query: "{\n  search(query:\"" + objectNameLowercase + "\", locale:DEFAULT) {\n    uuid\ntype\nname\ndescription\nimages{\nsmall\n}\nmetadata {\ntype\ngenders\n}\n  }\n}"
@@ -1398,7 +1390,6 @@ function objectView(uuid) {
 
         fetch(similarSearchUrl, {
           method: 'POST',
-          headers: similarSearchHeaders,
           body: similarSearchBodyData
         })
         .then(response => {
