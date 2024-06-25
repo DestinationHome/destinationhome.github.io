@@ -871,6 +871,7 @@ function fetchData(searchQuery) {
         }
 
         if (hideReward) {
+          filterSearchResults = [];
           for (var i = 0; i < searchResults.length; i++) {
             console.log(searchResults[i].type);
             if (searchResults[i].type != "REWARD") {
