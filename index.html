@@ -326,9 +326,11 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
               <div class="object-image">
                   <img src="resc/gray.webp" alt="Object Image" style="animation: fadeIn; animation-duration: 0.5s;">
                   <p class="object-age-rating" style="animation: fadeIn; animation-duration: 0.5s;">Age Rating: 18+</p>
+                  <button onclick="" id="maker-search-btn" class="button" style="width: 130px; word-wrap: break-word; display: none;">Search Studio</button>
               </div>
               <div class="object-info">
                   <h1 class="object-title" style="animation: fadeIn; animation-duration: 0.5s;">Object Name</h1>
+                  <p id="object-maker-disp" style="color: #d1d1d1;font-size: 13px;margin-top: -10px; margin-bottom: 10px; animation: fadeIn;animation-duration: 0.5s;">Studio: %MAKER%</p>
                   <p class="object-type" style="animation: fadeIn; animation-duration: 0.5s;">Type: Type of Object</p>
                   <!--<p class="object-premium-reward">Premium/Reward</p>-->
                   <p class="object-description" style="animation: fadeIn; animation-duration: 0.5s;">Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet eleifend nunc.</p>
@@ -1292,6 +1294,17 @@ function objectView(uuid) {
         var objectName = object.name;
         var objectDescription = object.description;
         var objectType = object.type;
+        var objectMaker = "";
+        var objectMakerImage = "";
+
+        if (object.maker != null) {
+          objectMaker = object.maker;
+        }
+        if (object.images.maker != null) {
+          objectMakerImage = object.images.maker;
+          objectMakerImage = objectMakerImage.replace('[THUMBNAIL_ROOT]', '');
+          objectMakerImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + objectMakerImage;
+        }
 
         if (object.images == null || object.images.small == null) {
           objectImage = 'resc/gray.webp';
@@ -1309,21 +1322,22 @@ function objectView(uuid) {
           var objectMetadata = object.metadata;
         }
 
-        var ageRatingImage = "<img width='130' src='resc/E.webp'>";
+        var ratingWidth = "130";
+        var ageRatingImage = "<img width='"+ratingWidth+"' src='resc/E.webp'>";
         if (objectAgeRating >= 3) {
-          ageRatingImage = "<img width='130' src='resc/E.webp'>";
+          ageRatingImage = "<img width='"+ratingWidth+"' src='resc/E.webp'>";
         }
         if (objectAgeRating >= 7) {
-          ageRatingImage = "<img width='130' src='resc/E.webp'>";
+          ageRatingImage = "<img width='"+ratingWidth+"' src='resc/E.webp'>";
         }
         if (objectAgeRating >= 12) {
-          ageRatingImage = "<img width='130' src='resc/T.webp'>";
+          ageRatingImage = "<img width='"+ratingWidth+"' src='resc/T.webp'>";
         }
         if (objectAgeRating >= 16) {
-          ageRatingImage = "<img width='130' src='resc/M.webp'>";
+          ageRatingImage = "<img width='"+ratingWidth+"' src='resc/M.webp'>";
         }
         if (objectAgeRating >= 18) {
-          ageRatingImage = "<img width='130' src='resc/AO.webp'>";
+          ageRatingImage = "<img width='"+ratingWidth+"' src='resc/AO.webp'>";
         }
 
         var obtainInstructions = 'No obtain instructions found.';
@@ -1352,6 +1366,9 @@ function objectView(uuid) {
         document.getElementById('obj-detail-save').setAttribute('onclick', 'objectSave("'+uuid+'")');
         document.getElementById('obj-detail-copy').setAttribute('onclick', 'objectCopy("'+uuid+'", "'+objectType+'")');
         document.getElementById('obj-detail-copy-url').setAttribute('onclick', 'objectURLCopy("'+uuid+'")');
+        document.getElementById('maker-search-btn').setAttribute('onclick', 'makerSearch("'+objectMaker+'")');
+        //document.getElementById('maker-search-btn').textContent = "Search Studio";
+        document.getElementById('object-maker-disp').textContent = objectMaker;
         document.getElementById('similar-obj-dyn-cont').innerHTML = '';
         document.getElementById('collections-detail-objcont').style.display = 'block';
         document.getElementById('collections-dyn-cont').innerHTML = '';
@@ -1384,8 +1401,14 @@ function objectView(uuid) {
 
         const similarSearchUrl = 'https://catalogue.destinationhome.live';
 
+        // cut objectNameLowercase to only the first 20 characters
+        var similarObjNameSearch = objectNameLowercase;
+        if (similarObjNameSearch.length > 20) {
+          similarObjNameSearch = similarObjNameSearch.substring(0, 20);
+        }
+
         const similarSearchBodyData = JSON.stringify({
-          query: "{\n  search(query:\"" + objectNameLowercase + "\", locale:DEFAULT) {\n    uuid\ntype\nname\ndescription\nimages{\nsmall\n}\nmetadata {\ntype\ngenders\n}\n  }\n}"
+          query: "{\n  search(query:\"" + similarObjNameSearch + "\", locale:DEFAULT) {\n    uuid\ntype\nname\nimages{\nsmall\n}\n  }\n}"
         });
 
         fetch(similarSearchUrl, {
