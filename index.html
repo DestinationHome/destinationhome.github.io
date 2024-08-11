@@ -383,7 +383,7 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
   <section class="hero is-primary" style="background-color: #191c1e; margin-bottom: -40px; margin-top: -10px;">
     <div class="hero-body">
       <div class="container">
-        <a href="https://objects.destinationhome.live" style="text-decoration: none; color: inherit;">
+        <a href="/" style="text-decoration: none; color: inherit;">
           <h3 class="subtitle">
               <img src="resc/logo.svg" width="35px" style="border-radius: 10px;">
               <span id="ahhtitle">Destination Home Object Catalogue <span style="font-size: 10px; color: gray;"><i>BETA</i></span></span>
@@ -482,7 +482,7 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
 document.getElementById('search-input').addEventListener('keypress', function(event) {
   if (event.key === 'Enter') {
     if (document.getElementById('search-input').value.trim() === '') {
-      window.location.href = 'https://objects.destinationhome.live';
+      window.location.href = '/';
       return;
     }
     event.preventDefault();
@@ -613,7 +613,7 @@ var loadingtime = 0;
 
 document.getElementById('search-btn').addEventListener('click', function() {
   if (document.getElementById('search-input').value.trim() === '') {
-    window.location.href = 'https://objects.destinationhome.live';
+    window.location.href = '/';
     return;
   }
   var searchQuery = document.querySelector('.input').value;
@@ -660,8 +660,7 @@ function showCollection(id) {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
           var response = JSON.parse(xhr.responseText);
-          var searchResults = response.data.search;
-          var searchResult = searchResults[0];
+          var searchResult = response.data.object;
           var thisUuid = searchResult.uuid;
           var thisImage = searchResult.images.small.replace('[THUMBNAIL_ROOT]', '');
           var thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
@@ -713,7 +712,7 @@ function showCollection(id) {
         }
       };
       var bodyData = JSON.stringify({
-        query: "{\n  search(query:\""+uuid+"\", locale:DEFAULT) {\n    uuid\ntype\nname\ndescription\nimages{\nsmall\n}\nmetadata {\ntype\ngenders\n}\n  }\n}"
+        query: `{ object(query:"${uuid}", locale:DEFAULT) { uuid type name description images { small } metadata { type genders } } }`
       });
 
       xhr.send(bodyData);
@@ -737,8 +736,7 @@ function fetchFeatured() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
-                    var searchResults = response.data.search;
-                    var searchResult = searchResults[0];
+                    var searchResult = response.data.object;
                     var thisUuid = searchResult.uuid;
                     var thisImage = searchResult.images.small.replace('[THUMBNAIL_ROOT]', '');
                     var thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
@@ -798,7 +796,7 @@ function fetchFeatured() {
         };
 
         var bodyData = JSON.stringify({
-            query: "{\n  search(query:\""+uuid+"\", locale:DEFAULT) {\n    uuid\ntype\nname\ndescription\nimages{\nsmall\n}\nmetadata {\ntype\ngenders\n}\n  }\n}"
+            query: `{ object(uuid:"${uuid}", locale:DEFAULT) { uuid type name description images { small } metadata { type genders } } }`
         });
 
         xhr.send(bodyData);
@@ -983,7 +981,7 @@ function fetchData(searchQuery) {
   };
 
   var bodyData = JSON.stringify({
-    query: "{\n  search(query:\""+searchQuery+"\", locale:DEFAULT) {\n    uuid\ntype\nname\ndescription\nimages{\nsmall\n}\nmetadata {\ntype\ngenders\n}\n  }\n}"
+    query: `{ search(query:"\\"${searchQuery}\\"", locale:DEFAULT) { uuid type name description images { small } metadata { type genders } } }`
   });
 
     // show loading-spinner
@@ -1476,7 +1474,7 @@ function objectView(uuid) {
   };
 
   var bodyData = JSON.stringify({
-    query: "{\n  object(uuid:\""+uuid+"\", locale:DEFAULT) {\n    type\nname\ndescription\nmaker images{\nsmall\nmaker\n}\nlegal {\nageRating{\nminimumAge\n}\n}\nmetadata {\ntype\ngenders\n}\n }\n}"
+    query: "{\n  object(uuid:\""+uuid+"\", locale:DEFAULT) {\n    type\nname\ndescription\nmaker images{\nsmall\nmaker\n}\nlegal {\nminimumAge\n}\nmetadata {\ntype\ngenders\n}\n }\n}"
   });
   xhr.send(bodyData);
   // do toggleDetails(); after 0.5 seconds
@@ -1576,7 +1574,7 @@ function populateSavedItems() {
       };
 
       var bodyData = JSON.stringify({
-        query: "{\n  search(query:\""+item+"\", locale:DEFAULT) {\n    uuid\nname\nimages{\nsmall\n}\n }\n}"
+        query: `{ search(query:"\"${item}\"", locale:DEFAULT) { uuid name images{ small } } }`
       });
 
       xhr.send(bodyData);
