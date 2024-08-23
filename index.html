@@ -19,8 +19,8 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡟⠀⠀⠀⠀
 
-Written by Sabrina for Destination Home <3
-For Destination Home. Not for you to take.
+Written by Sabrina and Zeph for Destination Home <3
+*For Destination Home*. Not for you to take.
 If you steal my code, and I'll know you did, I'll farm Reddit karma with screenshots of you.
 Think you can get away with it? Think again. You'll be cooked and served buddy.
 -->
@@ -577,39 +577,65 @@ var partOfCollectionSkeleton = `
 </div>
 `;
 
-var collectionsJSON = {
-  "collections": [
-    {
-      "name": "Beachside Bliss",
-      "id": "beachside-bliss",
-      "description": "Find your perfect beach outfit with fresh, breezy styles designed for sunny days by the shore.",
-      "image": "https://raw.githubusercontent.com/DestinationHome/destinationhome.github.io/main/resc/coll_samp_03.jpg",
-      "uuids": ["3D409B0B-E76E47B4-9E491DF5-73F6B847", "BDE52F99-81BD4DA0-AFC1F65D-B085362F", "652B0332-8DFF4B0B-AB74AF7C-C40960CD", "3DBAD9A2-7F874594-9AD63F45-D0353655", "598AE6F9-A2A84AF5-AEB6391E-8DE49BEC"
-      ]
-    },
-    {
-      "name": "Urban Sophisticate",
-      "id": "urban-sophisticate",
-      "description": "Sleek, city-ready styles. Perfect for any urban adventure.",
-      "image": "https://raw.githubusercontent.com/DestinationHome/destinationhome.github.io/main/resc/coll_samp_02.jpg",
-      "uuids": [ "9CBB16B1-545B4CBA-8975E8A1-7A60609B", "0084191F-88CE46E4-9F749B90-0903412A", "0B7BFED8-4EE349BA-BF9A1C9A-5F5A96E7", "00C455C3-E0DC4C83-AE18CB3B-F8C7FA84", "13934089-D0A54FC3-8FD84782-0A5225BA", "8209FE10-F877490C-BB0EFD55-2F655EDF", "A597D949-53384AA3-97D96FA8-D2E38227"
-      ]
-    },
-    {
-      "name": "Monochrome Elegance",
-      "id": "monochrome-elegance",
-      "description": "Featuring stylish black and white outfits for every occasion, a perfect blend of classic and modern.",
-      "image": "https://raw.githubusercontent.com/DestinationHome/destinationhome.github.io/main/resc/coll_samp_01.jpg",
-      "uuids": ["4D839FE4-5A11485E-B4B260F2-F6FABE63", "FA2AF0E9-E4F94479-97C864E8-0D3D36A7", "24A48514-2A95476C-BB9BB5F3-EAF26B67", "338EE2AC-03C3436E-9B0C0BFA-85E52AAB", "CD017F4D-67B74CE9-8EDA9BC8-78AB924B", "03BC05DA-7C8242FF-A6302325-B40E2078", "9707A679-1A554BAF-920B54B9-B9CD7CC5", "2C2840ED-B6784ACA-869F412F-59D662CF", "C4060C1B-FE58421E-BD88E082-E033AE67"
-      ]
+/// Request collections from server
+function fetchCollections(callback) {
+  // var url = 'https://catalogue.destinationhome.live';
+  var url = 'http://localhost:8080';
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', url, true);
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        var collections = response.data.collections;
+
+        callback(collections);
+      } else {
+          console.error('Request failed with status:', xhr.status);
+      }
     }
-  ]
-};
+  };
+
+  var bodyData = JSON.stringify({
+    query: `{
+      collections {
+        uuid
+        
+        author {
+          displayName
+        }
+        
+        name
+        description
+        imageUrl
+          
+        objects {
+          uuid
+          
+          name
+          description
+          images { small }
+          legal { minimumAge }
+          type
+        }
+      }
+    }`
+  });
+
+  xhr.send(bodyData);
+}
 
 var result_save = "";
 var results_loaded = 0;
 var results_total = 0;
 var loadingtime = 0;
+var collections = [];
+
+fetchCollections((collections) => {
+  this.collections = collections;
+  populateCollections();
+});
 
 document.getElementById('search-btn').addEventListener('click', function() {
   if (document.getElementById('search-input').value.trim() === '') {
@@ -622,101 +648,82 @@ document.getElementById('search-btn').addEventListener('click', function() {
 
 function populateCollections() {
   var collectionContainer = document.getElementById('collection-container');
-  collectionsJSON.collections.forEach(function(collection) {
-    collection.id = collection.id.replace(/\s/g, '');
+  
+  collections.forEach(function(collection) {
     var collectionCard = collectionCardsSkeleton
-      .replace('[COLLECTION_IMG]', collection.image)
+      .replace('[COLLECTION_IMG]', collection.imageUrl)
       .replace('[COLLECTION_NAME]', collection.name)
       .replace('[COLLECTION_DESC]', collection.description)
-      .replace('[COLLECTION_ID]', collection.id)
-      .replace('[COLLECTION_ID2]', collection.id);
+      .replace('[COLLECTION_ID]', collection.uuid)
+      .replace('[COLLECTION_ID2]', collection.uuid);
     collectionContainer.innerHTML += collectionCard;
   });
 }
 
-function showCollection(id) {
+function showCollection(uuid) {
   var modals = document.getElementsByClassName('modal');
   for (var i = 0; i < modals.length; i++) {
       modals[i].classList.remove('is-active');
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  var collectionData = collectionsJSON.collections.find(function(collection) {
-    return collection.id === id;
+  var collection = collections.find(function(collection) {
+    return collection.uuid === uuid;
   });
-  var collectionUUIDs = collectionData.uuids;
   document.getElementById('search-container').innerHTML = '';
-  document.getElementById('search-input').value = 'Collection: '+collectionData.name;
+  document.getElementById('search-input').value = 'Collection: '+collection.name;
   document.getElementById('featured-objects-title').style.display = 'none';
-  document.getElementById('collection-title-title').innerHTML = collectionData.name;
-  document.getElementById('collection-title-desc').innerHTML = collectionData.description;
+  document.getElementById('collection-title-title').innerHTML = collection.name;
+  document.getElementById('collection-title-desc').innerHTML = collection.description;
   document.getElementById('collection-title-container').style.display = 'block';
 
-  collectionUUIDs.forEach(function(uuid) {
-    var url = 'https://catalogue.destinationhome.live';
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
-          var searchResult = response.data.object;
-          var thisUuid = searchResult.uuid;
-          var thisImage = searchResult.images.small.replace('[THUMBNAIL_ROOT]', '');
-          var thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
-          var thisDescription = "No description available.";
-          if (searchResult.description !== null) {
-            thisDescription = searchResult.description.replace('[#Legal]', '');
-            thisDescription = thisDescription.replace(/\\n+/g, ' ');
-          }
-          if (thisDescription.length > 100) {
-            thisDescription = thisDescription.substring(0, 100) + "...";
-          }
-          var gender = "";
-          var gender_icon = ""; 
-          var itemType = searchResult.type;
-          var itemTypeNormal = itemType.toLowerCase().charAt(0).toUpperCase() + itemType.slice(1).toLowerCase();
-          var itemClass = "";
-          var isItemAllowedToCopy = true;
-          if (itemType == "REWARD") {
-            itemClass = "isRewardCard";
-            isItemAllowedToCopy = false;
-          }
-          if (searchResult.name != null) {
-            if (searchResult.name.toLowerCase().includes("bundle") || searchResult.name.toLowerCase().includes("pack") || searchResult.name.toLowerCase().includes("set") || searchResult.name.toLowerCase().includes("collection")) {
-              itemClass = "isRewardCard";
-              isItemAllowedToCopy = false;
-            }
-          }
-          var anim_ct = collectionUUIDs.indexOf(uuid) + 1;
-          var resultHTML = resultSkeleton
-                  .replace('[IMAGE_PLACEHOLDER]', thisImage)
-                  .replace('[NAME_PLACEHOLDER]', searchResult.name)
-                  .replace('[UUID]', thisUuid)
-                  .replace('[UUID2]', thisUuid)
-                  .replace('[UUID3]', thisUuid)
-                  .replace('[UUID4]', thisUuid)
-                  .replace('[UUID5]', thisUuid)
-                  .replace('[GENDER_ICON]', gender_icon)
-                  .replace('[ITEM_CLASS]', 'isFeaturedItem')
-                  .replace('[ITEM_TYPE]', itemTypeNormal)
-                  .replace('[ITEM_TYPE_2]', itemClass)
-                  .replace('[INIT_ANIM]', 'init-element-anim-'+anim_ct)
-                  .replace('[HEADER_PLACEHOLDER]', '✨ Collection')
-                  .replace('[DESC_PLACEHOLDER]', thisDescription);
-              document.getElementById('search-container').innerHTML += resultHTML;
-              setTimeout(removeImgLoading, 500, thisUuid);
-          } else {
-              console.error('Request failed with status:', xhr.status);
-          }
-        }
-      };
-      var bodyData = JSON.stringify({
-        query: `{ object(query:"${uuid}", locale:DEFAULT) { uuid type name description images { small } metadata { type genders } } }`
-      });
-
-      xhr.send(bodyData);
-  });
+  collection.objects.forEach(function(object) {
+    var thisUuid = object.uuid;
+    var thisImage = object.images.small.replace('[THUMBNAIL_ROOT]', '');
+    var thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
+    var thisDescription = "No description available.";
+    if (object.description !== null) {
+      thisDescription = object.description.replace('[#Legal]', '');
+      thisDescription = thisDescription.replace(/\\n+/g, ' ');
+    }
+    if (thisDescription.length > 100) {
+      thisDescription = thisDescription.substring(0, 100) + "...";
+    }
+    var gender = "";
+    var gender_icon = ""; 
+    var itemType = object.type;
+    var itemTypeNormal = itemType.toLowerCase().charAt(0).toUpperCase() + itemType.slice(1).toLowerCase();
+    var itemClass = "";
+    var isItemAllowedToCopy = true;
+    if (itemType == "REWARD") {
+      itemClass = "isRewardCard";
+      isItemAllowedToCopy = false;
+    }
+    if (object.name != null) {
+      if (object.name.toLowerCase().includes("bundle") || object.name.toLowerCase().includes("pack") || object.name.toLowerCase().includes("set") || object.name.toLowerCase().includes("collection")) {
+        itemClass = "isRewardCard";
+        isItemAllowedToCopy = false;
+      }
+    }
+    var anim_ct = collection.objects.indexOf(object) + 1;
+    var resultHTML = resultSkeleton
+            .replace('[IMAGE_PLACEHOLDER]', thisImage)
+            .replace('[NAME_PLACEHOLDER]', object.name)
+            .replace('[UUID]', thisUuid)
+            .replace('[UUID2]', thisUuid)
+            .replace('[UUID3]', thisUuid)
+            .replace('[UUID4]', thisUuid)
+            .replace('[UUID5]', thisUuid)
+            .replace('[GENDER_ICON]', gender_icon)
+            .replace('[ITEM_CLASS]', 'isFeaturedItem')
+            .replace('[ITEM_TYPE]', itemTypeNormal)
+            .replace('[ITEM_TYPE_2]', itemClass)
+            .replace('[INIT_ANIM]', 'init-element-anim-'+anim_ct)
+            .replace('[HEADER_PLACEHOLDER]', '✨ Collection')
+            .replace('[DESC_PLACEHOLDER]', thisDescription);
+        document.getElementById('search-container').innerHTML += resultHTML;
+        setTimeout(removeImgLoading, 500, thisUuid);
+    }
+  );
 }
 
 function fetchFeatured() {
@@ -1373,7 +1380,7 @@ function objectView(uuid) {
         document.getElementById('collections-dyn-cont').innerHTML = '';
         var collectionsCount = 0;
 
-        collectionsJSON.collections.forEach(function(collection) {
+        collections.forEach(function(collection) {
           var dispDesc = collection.description;
           if (collection.description == null) {
             dispDesc = 'No description available.';
@@ -1384,10 +1391,10 @@ function objectView(uuid) {
           if (collection.uuids.includes(uuid)) {
             collectionsCount++;
             var collectionCard = partOfCollectionSkeleton
-              .replace('[COLLECTION_IMG]', collection.image)
+              .replace('[COLLECTION_IMG]', collection.imageUrl)
               .replace('[COLLECTION_NAME]', collection.name)
               .replace('[COLLECTION_DESC]', dispDesc)
-              .replace('[COLLECTION_ID]', collection.id);
+              .replace('[COLLECTION_ID]', collection.uuid);
             document.getElementById('collections-dyn-cont').innerHTML += collectionCard;
           }
         });
@@ -1747,7 +1754,6 @@ closeModals.forEach(function(element) {
 });
 
 checkURL();
-populateCollections();
   </script>
 </body>
 </html>
