@@ -634,7 +634,7 @@ var result_save = "";
 var results_loaded = 0;
 var results_total = 0;
 var loadingtime = 0;
-var collections = [];
+var collections = undefined;
 
 fetchCollections((collections) => {
   this.collections = collections;
@@ -664,17 +664,9 @@ function populateCollections() {
   });
 }
 
-function showCollection(uuid) {
-  var modals = document.getElementsByClassName('modal');
-  for (var i = 0; i < modals.length; i++) {
-      modals[i].classList.remove('is-active');
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  var collection = collections.find(function(collection) {
-    return collection.uuid === uuid;
-  });
+function loadCollection(collection) {
   document.getElementById('search-container').innerHTML = '';
-  document.getElementById('search-input').value = 'Collection: '+collection.name;
+  document.getElementById('search-input').value = 'Collection: ' + collection.name;
   document.getElementById('featured-objects-title').style.display = 'none';
   document.getElementById('collection-title-title').innerHTML = collection.name;
   document.getElementById('collection-title-desc').innerHTML = collection.description;
@@ -720,6 +712,30 @@ function showCollection(uuid) {
         setTimeout(removeImgLoading, 500, thisUuid);
     }
   );
+}
+
+function showCollection(uuid) {
+  var modals = document.getElementsByClassName('modal');
+  for (var i = 0; i < modals.length; i++) {
+      modals[i].classList.remove('is-active');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Initial load -- we have to wait for them to load so everything has to run after
+  if (!this.collections) {
+    fetchCollections((collections) => {
+      this.collections = collections;
+
+      var collection = this.collections.find((collection) => collection.uuid === uuid);
+      loadCollection(collection);
+
+      return;
+    });
+  }
+
+  // Already loaded -- we can just load the collection
+  var collection = this.collections.find((collection) => collection.uuid === uuid);
+  loadCollection(collection);
 }
 
 function fetchFeatured() {
