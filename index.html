@@ -224,7 +224,7 @@ Think you can get away with it? Think again. You'll be cooked and served buddy.
 }
 
 .isFeaturedItem {
-	background: linear-gradient(#fafafa, rgb(249 186 186 / 79%));
+	background: linear-gradient(#ffd494, rgba(255, 213, 136, 0.8));
 	background-size: cover;
 	background-position: center;
 	background-blend-mode: overlay;
@@ -577,6 +577,10 @@ var partOfCollectionSkeleton = `
 </div>
 `;
 
+function capitalized(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 /// Request collections from server
 function fetchCollections(callback) {
   var url = 'https://catalogue.destinationhome.live';
@@ -617,6 +621,7 @@ function fetchCollections(callback) {
           images { small }
           legal { minimumAge }
           type
+          bundle
         }
       }
     }`
@@ -689,20 +694,12 @@ function showCollection(uuid) {
     }
     var gender = "";
     var gender_icon = ""; 
-    var itemType = object.type;
-    var itemTypeNormal = itemType.toLowerCase().charAt(0).toUpperCase() + itemType.slice(1).toLowerCase();
     var itemClass = "";
-    var isItemAllowedToCopy = true;
-    if (itemType == "REWARD") {
-      itemClass = "isRewardCard";
-      isItemAllowedToCopy = false;
-    }
-    if (object.name != null) {
-      if (object.name.toLowerCase().includes("bundle") || object.name.toLowerCase().includes("pack") || object.name.toLowerCase().includes("set") || object.name.toLowerCase().includes("collection")) {
-        itemClass = "isRewardCard";
-        isItemAllowedToCopy = false;
-      }
-    }
+
+    // Non-requestable detection
+    var isBundle = object.bundle || object.type != "PREMIUM";
+    if (isBundle) itemClass = "isRewardCard";
+
     var anim_ct = collection.objects.indexOf(object) + 1;
     var resultHTML = resultSkeleton
             .replace('[IMAGE_PLACEHOLDER]', thisImage)
@@ -714,7 +711,7 @@ function showCollection(uuid) {
             .replace('[UUID5]', thisUuid)
             .replace('[GENDER_ICON]', gender_icon)
             .replace('[ITEM_CLASS]', 'isFeaturedItem')
-            .replace('[ITEM_TYPE]', itemTypeNormal)
+            .replace('[ITEM_TYPE]', capitalized(object.type))
             .replace('[ITEM_TYPE_2]', itemClass)
             .replace('[INIT_ANIM]', 'init-element-anim-'+anim_ct)
             .replace('[HEADER_PLACEHOLDER]', '✨ Collection')
@@ -757,22 +754,10 @@ function fetchFeatured() {
                     }
                     var gender = "";
                     var gender_icon = "";
-                
-                    var itemType = searchResult.type;
-                    var itemTypeNormal = itemType.toLowerCase().charAt(0).toUpperCase() + itemType.slice(1).toLowerCase();
                     var itemClass = "";
-                    var isItemAllowedToCopy = true;
-                    if (itemType == "REWARD") {
-                        itemClass = "isRewardCard";
-                        isItemAllowedToCopy = false;
-                    }
-                
-                    if (searchResult.name != null) {
-                        if (searchResult.name.toLowerCase().includes("bundle") || searchResult.name.toLowerCase().includes("pack") || searchResult.name.toLowerCase().includes("set") || searchResult.name.toLowerCase().includes("collection")) {
-                            itemClass = "isRewardCard";
-                            isItemAllowedToCopy = false;
-                        }
-                    }
+
+                    var isBundle = searchResult.bundle || searchResult.type != "PREMIUM";
+                    if (isBundle) itemClass = "isRewardCard";
                 
                     var anim_ct = featuredUUIDs.indexOf(uuid) + 1;
 
@@ -786,7 +771,7 @@ function fetchFeatured() {
                         .replace('[UUID5]', thisUuid)
                         .replace('[GENDER_ICON]', gender_icon)
                         .replace('[ITEM_CLASS]', 'isFeaturedItem')
-                        .replace('[ITEM_TYPE]', itemTypeNormal)
+                        .replace('[ITEM_TYPE]', capitalized(searchResult.type))
                         .replace('[ITEM_TYPE_2]', itemClass)
                         .replace('[INIT_ANIM]', 'init-element-anim-'+anim_ct)
                         .replace('[HEADER_PLACEHOLDER]', '✨ Featured')
@@ -794,7 +779,7 @@ function fetchFeatured() {
                     document.getElementById('search-container').innerHTML += resultHTML;
                     setTimeout(removeImgLoading, 500, thisUuid);
 
-                    console.log("UUID: " + thisUuid + " | Name: " + searchResult.name + " | Type: " + itemTypeNormal + " | Meta_Type: " + searchResult.metadata.type + "Meta_Genders: " + searchResult.metadata.genders);
+                    console.log("UUID: " + thisUuid + " | Name: " + searchResult.name + " | Type: " + searchResult.type + " | Meta_Type: " + searchResult.metadata.type + "Meta_Genders: " + searchResult.metadata.genders);
                 } else {
                     console.error('Request failed with status:', xhr.status);
                 }
@@ -802,7 +787,7 @@ function fetchFeatured() {
         };
 
         var bodyData = JSON.stringify({
-            query: `{ object(uuid:"${uuid}", locale:DEFAULT) { uuid type name description images { small } metadata { type genders } } }`
+            query: `{ object(uuid:"${uuid}", locale:DEFAULT) { uuid type bundle name description images { small } metadata { type genders } } }`
         });
 
         xhr.send(bodyData);
@@ -944,20 +929,10 @@ function fetchData(searchQuery) {
                 gender_icon = '<img src="resc/male.png" width="50px">';
             }
 
-            var itemType = searchResults[i].type;
-            var itemTypeNormal = itemType.toLowerCase().charAt(0).toUpperCase() + itemType.slice(1).toLowerCase();
             var itemClass = "";
-            var isItemAllowedToCopy = true;
-            if (itemType == "REWARD") {
-                itemClass = "isRewardCard";
-                isItemAllowedToCopy = false;
-            }
-
-            if (searchResults[i].name != null) {
-            if (searchResults[i].name.toLowerCase().includes("bundle") || searchResults[i].name.toLowerCase().includes("pack") || searchResults[i].name.toLowerCase().includes("set") || searchResults[i].name.toLowerCase().includes("collection")) {
-                itemClass = "isRewardCard";
-                isItemAllowedToCopy = false;
-            }}
+            
+            var isBundle = searchResults[i].bundle || searchResults[i].type != "PREMIUM";
+            if (isBundle) itemClass = "isRewardCard";
 
             var anim_ct = i + 1;
 
@@ -972,7 +947,7 @@ function fetchData(searchQuery) {
           .replace('[UUID5]', thisUuid)
           .replace('[GENDER_ICON]', gender_icon)
           .replace('[ITEM_CLASS]', itemClass)
-          .replace('[ITEM_TYPE]', itemTypeNormal)
+          .replace('[ITEM_TYPE]', capitalized(searchResults[i].type))
           .replace('[ITEM_TYPE_2]', itemClass)
           .replace('[INIT_ANIM]', 'init-element-anim-'+anim_ct)
           .replace('[HEADER_PLACEHOLDER]', 'Result '+resultIndex)
@@ -987,7 +962,7 @@ function fetchData(searchQuery) {
   };
 
   var bodyData = JSON.stringify({
-    query: `{ search(query:"\\"${searchQuery}\\"", locale:DEFAULT) { uuid type name description images { small } metadata { type genders } } }`
+    query: `{ search(query:"\\"${searchQuery}\\"", locale:DEFAULT) { uuid type bundle name description images { small } metadata { type genders } } }`
   });
 
     // show loading-spinner
@@ -1098,21 +1073,10 @@ function loadMoreResults() {
                 gender_icon = '<img src="resc/male.png" width="50px">';
             }
 
-            var itemType = result_save[i].type;
-            var itemTypeNormal = itemType.toLowerCase().charAt(0).toUpperCase() + itemType.slice(1).toLowerCase();
             var itemClass = "";
-            var isItemAllowedToCopy = true;
-            if (itemType == "REWARD") {
-                itemClass = "isRewardCard";
-                isItemAllowedToCopy = false;
-            }
-
-            if (result_save[i].name != null) {
-                if (result_save[i].name.toLowerCase().includes("bundle") || result_save[i].name.toLowerCase().includes("pack") || result_save[i].name.toLowerCase().includes("set") || result_save[i].name.toLowerCase().includes("collection")) {
-                    itemClass = "isRewardCard";
-                    isItemAllowedToCopy = false;
-                }
-            }
+            
+            var isBundle = result_save[i].bundle || result_save[i].type != "PREMIUM";
+            if (isBundle) itemClass = "isRewardCard";
 
         // remove [THUMBNAIL_ROOT] from thisImage
         var displayImage = displayImage.replace('[THUMBNAIL_ROOT]', '');
@@ -1127,7 +1091,7 @@ function loadMoreResults() {
             .replace('[UUID5]', thisUuid)
             .replace('[GENDER_ICON]', gender_icon)
             .replace('[ITEM_CLASS]', itemClass)
-            .replace('[ITEM_TYPE]', itemTypeNormal)
+            .replace('[ITEM_TYPE]', capitalized(result_save[i].type))
             .replace('[ITEM_TYPE_2]', itemClass)
             .replace('[INIT_ANIM]', '')
             .replace('[HEADER_PLACEHOLDER]', 'Result '+resultIndex)
@@ -1387,7 +1351,7 @@ function objectView(uuid) {
           if (collection.description.length > 50) {
             dispDesc = collection.description.substring(0, 50) + "...";
           }
-          if (collection.uuids.includes(uuid)) {
+          if (collection.objects.find(x => x.uuid === uuid)) {
             collectionsCount++;
             var collectionCard = partOfCollectionSkeleton
               .replace('[COLLECTION_IMG]', collection.imageUrl)
