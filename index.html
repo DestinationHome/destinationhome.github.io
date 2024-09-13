@@ -1383,46 +1383,40 @@ function objectView(uuid) {
         if (collectionsCount < 1) {
           document.getElementById('collections-detail-objcont').style.display = 'none';
         }
-	console.log("Reached_Similar_Search");
+	console.log("Reached_Similar_Search_XHR");
 
         document.getElementById('similar-obj-dyn-cont').innerHTML = '<img src="https://datapublic.uam.es/open/img-bi/spinner.gif" width="24px" style="margin-right: -20px;">';
 
-        const similarSearchUrl = 'https://catalogue.destinationhome.live';
 
-	// Cut objectNameLowercase to only the first 20 characters
-	var similarObjNameSearch = objectNameLowercase;
-	if (similarObjNameSearch.length > 20) {
-		similarObjNameSearch = similarObjNameSearch.substring(0, 20);
-	}
-	console.log("Reached_Sim_Search_01");
+const similarSearchUrl = 'https://catalogue.destinationhome.live';
 
-	const similarSearchBodyData = JSON.stringify({
-  		query: "{\n  search(query:\"" + similarObjNameSearch + "\", locale:DEFAULT) {\n    uuid\ntype\nname\nimages{\nsmall\n}\n  }\n}"
-	});
-	console.log("Reached_Sim_Search_02");
+// Cut objectNameLowercase to only the first 20 characters
+var similarObjNameSearch = objectNameLowercase;
+if (similarObjNameSearch.length > 20) {
+  similarObjNameSearch = similarObjNameSearch.substring(0, 20);
+}
 
-	// Timeout function
-	const fetchWithTimeout = (url, options, timeout = 5000) => {
-	  return Promise.race([
-	    fetch(url, options),
-	    new Promise((_, reject) =>
- 	     setTimeout(() => reject(new Error('Request timed out')), timeout)
- 	   )
- 	 ]);
-	};
-	console.log("Reached_Sim_Search_03");
+const similarSearchBodyData = JSON.stringify({
+  query: "{\n  search(query:\"" + similarObjNameSearch + "\", locale:DEFAULT) {\n    uuid\ntype\nname\nimages{\nsmall\n}\n  }\n}"
+});
 
-	fetchWithTimeout(similarSearchUrl, {
-	  method: 'POST',
-	  body: similarSearchBodyData
-	})
- 	 .then(response => {
- 	   if (!response.ok) {
- 	     throw new Error('Network response was not ok');
- 	   }
- 	   return response.json();
- 	 })
-  .then(similarSearchResponse => {
+// Create a new XMLHttpRequest
+var xhr_simsearch = new XMLHttpRequest();
+
+// Configure it: POST-request to the URL
+xhr_simsearch.open('POST', similarSearchUrl, true);
+
+// Set the request timeout to 5 seconds (5000 milliseconds)
+xhr_simsearch.timeout = 5000; // 5 seconds
+
+// Set request headers (if required)
+xhr_simsearch.setRequestHeader('Content-Type', 'application/json');
+
+// Set up the onload callback
+xhr_simsearch.onload = function() {
+  if (xhr_simsearch.status >= 200 && xhr_simsearch.status < 300) {
+    // Parse the response
+    const similarSearchResponse = JSON.parse(xhr_simsearch.responseText);
     const similarSearchResults = similarSearchResponse.data.search;
     const similarSearchResultsLength = similarSearchResults.length;
 
@@ -1452,10 +1446,23 @@ function objectView(uuid) {
 
     const combinedHTML = similarObjHTML1 + similarObjHTML2;
     document.getElementById('similar-obj-dyn-cont').innerHTML = combinedHTML;
-  })
-  .catch(error => {
-    console.error('Fetch error:', error);
-  });
+  } else {
+    console.error('Error: ', xhr_simsearch.statusText);
+  }
+};
+
+// Set up the onerror callback
+xhr_simsearch.onerror = function() {
+  console.error('Network Error');
+};
+
+// Set up the ontimeout callback
+xhr_simsearch.ontimeout = function() {
+  console.error('Request timed out');
+};
+
+// Send the request with the body data
+xhr_simsearch.send(similarSearchBodyData);
 
 
         // add fadeIn animation to all
