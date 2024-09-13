@@ -1480,7 +1480,7 @@ function objectView(uuid) {
     query: "{\n  object(uuid:\""+uuid+"\", locale:DEFAULT) {\n    type\nname\ndescription\nmaker images{\nsmall\nmaker\n}\nlegal {\nminimumAge\n}\nmetadata {\ntype\ngenders\n}\n }\n}"
   });
 console.log("Reached_Sim_Search_END");
-  //xhr.send(bodyData);
+  xhr.send(bodyData);
   // do toggleDetails(); after 0.5 seconds
   setTimeout(toggleDetails, 300);
 }
