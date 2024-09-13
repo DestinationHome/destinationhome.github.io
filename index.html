@@ -1389,36 +1389,39 @@ function objectView(uuid) {
 
         const similarSearchUrl = 'https://catalogue.destinationhome.live';
 
-// Cut objectNameLowercase to only the first 20 characters
-var similarObjNameSearch = objectNameLowercase;
-if (similarObjNameSearch.length > 20) {
-  similarObjNameSearch = similarObjNameSearch.substring(0, 20);
-}
+	// Cut objectNameLowercase to only the first 20 characters
+	var similarObjNameSearch = objectNameLowercase;
+	if (similarObjNameSearch.length > 20) {
+		similarObjNameSearch = similarObjNameSearch.substring(0, 20);
+	}
+	console.log("Reached_Sim_Search_01");
 
-const similarSearchBodyData = JSON.stringify({
-  query: "{\n  search(query:\"" + similarObjNameSearch + "\", locale:DEFAULT) {\n    uuid\ntype\nname\nimages{\nsmall\n}\n  }\n}"
-});
+	const similarSearchBodyData = JSON.stringify({
+  		query: "{\n  search(query:\"" + similarObjNameSearch + "\", locale:DEFAULT) {\n    uuid\ntype\nname\nimages{\nsmall\n}\n  }\n}"
+	});
+	console.log("Reached_Sim_Search_02");
 
-// Timeout function
-const fetchWithTimeout = (url, options, timeout = 5000) => {
-  return Promise.race([
-    fetch(url, options),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Request timed out')), timeout)
-    )
-  ]);
-};
+	// Timeout function
+	const fetchWithTimeout = (url, options, timeout = 5000) => {
+	  return Promise.race([
+	    fetch(url, options),
+	    new Promise((_, reject) =>
+ 	     setTimeout(() => reject(new Error('Request timed out')), timeout)
+ 	   )
+ 	 ]);
+	};
+	console.log("Reached_Sim_Search_03");
 
-fetchWithTimeout(similarSearchUrl, {
-  method: 'POST',
-  body: similarSearchBodyData
-})
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
+	fetchWithTimeout(similarSearchUrl, {
+	  method: 'POST',
+	  body: similarSearchBodyData
+	})
+ 	 .then(response => {
+ 	   if (!response.ok) {
+ 	     throw new Error('Network response was not ok');
+ 	   }
+ 	   return response.json();
+ 	 })
   .then(similarSearchResponse => {
     const similarSearchResults = similarSearchResponse.data.search;
     const similarSearchResultsLength = similarSearchResults.length;
@@ -1476,7 +1479,8 @@ fetchWithTimeout(similarSearchUrl, {
   var bodyData = JSON.stringify({
     query: "{\n  object(uuid:\""+uuid+"\", locale:DEFAULT) {\n    type\nname\ndescription\nmaker images{\nsmall\nmaker\n}\nlegal {\nminimumAge\n}\nmetadata {\ntype\ngenders\n}\n }\n}"
   });
-  xhr.send(bodyData);
+console.log("Reached_Sim_Search_END");
+  //xhr.send(bodyData);
   // do toggleDetails(); after 0.5 seconds
   setTimeout(toggleDetails, 300);
 }
