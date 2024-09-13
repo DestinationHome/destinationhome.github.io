@@ -1386,60 +1386,71 @@ function objectView(uuid) {
 
         const similarSearchUrl = 'https://catalogue.destinationhome.live';
 
-        // cut objectNameLowercase to only the first 20 characters
-        var similarObjNameSearch = objectNameLowercase;
-        if (similarObjNameSearch.length > 20) {
-          similarObjNameSearch = similarObjNameSearch.substring(0, 20);
-        }
+// Cut objectNameLowercase to only the first 20 characters
+var similarObjNameSearch = objectNameLowercase;
+if (similarObjNameSearch.length > 20) {
+  similarObjNameSearch = similarObjNameSearch.substring(0, 20);
+}
 
-        const similarSearchBodyData = JSON.stringify({
-          query: "{\n  search(query:\"" + similarObjNameSearch + "\", locale:DEFAULT) {\n    uuid\ntype\nname\nimages{\nsmall\n}\n  }\n}"
-        });
+const similarSearchBodyData = JSON.stringify({
+  query: "{\n  search(query:\"" + similarObjNameSearch + "\", locale:DEFAULT) {\n    uuid\ntype\nname\nimages{\nsmall\n}\n  }\n}"
+});
 
-        fetch(similarSearchUrl, {
-          method: 'POST',
-          body: similarSearchBodyData
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(similarSearchResponse => {
-          const similarSearchResults = similarSearchResponse.data.search;
-          const similarSearchResultsLength = similarSearchResults.length;
-        
-          // Ensure the two random indices are different
-          let similarSearchResultsRandom = Math.floor(Math.random() * similarSearchResultsLength);
-          let similarSearchResultsRandom2;
-          do {
-            similarSearchResultsRandom2 = Math.floor(Math.random() * similarSearchResultsLength);
-          } while (similarSearchResultsRandom2 === similarSearchResultsRandom);
-        
-          const similarSearchResult1 = similarSearchResults[similarSearchResultsRandom];
-          const similarSearchResult2 = similarSearchResults[similarSearchResultsRandom2];
+// Timeout function
+const fetchWithTimeout = (url, options, timeout = 5000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timed out')), timeout)
+    )
+  ]);
+};
 
-          const similarSearchResult1Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult1.uuid + "/" + similarSearchResult1.images.small.replace('[THUMBNAIL_ROOT]', '');
-          const similarSearchResult2Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult2.uuid + "/" + similarSearchResult2.images.small.replace('[THUMBNAIL_ROOT]', '');
+fetchWithTimeout(similarSearchUrl, {
+  method: 'POST',
+  body: similarSearchBodyData
+})
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(similarSearchResponse => {
+    const similarSearchResults = similarSearchResponse.data.search;
+    const similarSearchResultsLength = similarSearchResults.length;
 
-          const similarObjHTML1 = similarObjSkeleton
-            .replace('[SIM_OBJ_IMG]', similarSearchResult1Image)
-            .replace('[SIM_OBJ_NAME]', similarSearchResult1.name)
-            .replace('[SIM_OBJ_UUID]', similarSearchResult1.uuid)
-            .replace('[SIM_OBJ_TYPE]', similarSearchResult1.type);
-          const similarObjHTML2 = similarObjSkeleton
-            .replace('[SIM_OBJ_IMG]', similarSearchResult2Image)
-            .replace('[SIM_OBJ_NAME]', similarSearchResult2.name)
-            .replace('[SIM_OBJ_UUID]', similarSearchResult2.uuid)
-            .replace('[SIM_OBJ_TYPE]', similarSearchResult2.type);
+    // Ensure the two random indices are different
+    let similarSearchResultsRandom = Math.floor(Math.random() * similarSearchResultsLength);
+    let similarSearchResultsRandom2;
+    do {
+      similarSearchResultsRandom2 = Math.floor(Math.random() * similarSearchResultsLength);
+    } while (similarSearchResultsRandom2 === similarSearchResultsRandom);
 
-          const combinedHTML = similarObjHTML1 + similarObjHTML2;
-          document.getElementById('similar-obj-dyn-cont').innerHTML = combinedHTML;
-        })
-        .catch(error => {
-          console.error('Fetch error:', error);
-        });
+    const similarSearchResult1 = similarSearchResults[similarSearchResultsRandom];
+    const similarSearchResult2 = similarSearchResults[similarSearchResultsRandom2];
+
+    const similarSearchResult1Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult1.uuid + "/" + similarSearchResult1.images.small.replace('[THUMBNAIL_ROOT]', '');
+    const similarSearchResult2Image = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + similarSearchResult2.uuid + "/" + similarSearchResult2.images.small.replace('[THUMBNAIL_ROOT]', '');
+
+    const similarObjHTML1 = similarObjSkeleton
+      .replace('[SIM_OBJ_IMG]', similarSearchResult1Image)
+      .replace('[SIM_OBJ_NAME]', similarSearchResult1.name)
+      .replace('[SIM_OBJ_UUID]', similarSearchResult1.uuid)
+      .replace('[SIM_OBJ_TYPE]', similarSearchResult1.type);
+    const similarObjHTML2 = similarObjSkeleton
+      .replace('[SIM_OBJ_IMG]', similarSearchResult2Image)
+      .replace('[SIM_OBJ_NAME]', similarSearchResult2.name)
+      .replace('[SIM_OBJ_UUID]', similarSearchResult2.uuid)
+      .replace('[SIM_OBJ_TYPE]', similarSearchResult2.type);
+
+    const combinedHTML = similarObjHTML1 + similarObjHTML2;
+    document.getElementById('similar-obj-dyn-cont').innerHTML = combinedHTML;
+  })
+  .catch(error => {
+    console.error('Fetch error:', error);
+  });
+
 
         // add fadeIn animation to all
         document.querySelector('.object-title').style.animation = 'fadeIn';
