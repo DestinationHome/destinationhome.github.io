@@ -1346,6 +1346,7 @@ function objectView(uuid) {
         document.querySelector('.object-image img').src = objectImage;
         document.querySelector('.object-age-rating').innerHTML = ageRatingImage;
         document.querySelector('.object-obtain-instructions').textContent = obtainInstructions;
+	console.log("Reached_Obtain_Instruct");
 
         // get obj-detail-save and change onclick to objectSave(uuid)
         document.getElementById('obj-detail-save').setAttribute('onclick', 'objectSave("'+uuid+'")');
@@ -1358,6 +1359,7 @@ function objectView(uuid) {
         document.getElementById('collections-detail-objcont').style.display = 'block';
         document.getElementById('collections-dyn-cont').innerHTML = '';
         var collectionsCount = 0;
+	console.log("Reached_Coll_Count");
 
         collections.forEach(function(collection) {
           var dispDesc = collection.description;
@@ -1381,6 +1383,7 @@ function objectView(uuid) {
         if (collectionsCount < 1) {
           document.getElementById('collections-detail-objcont').style.display = 'none';
         }
+	console.log("Reached_Similar_Search");
 
         document.getElementById('similar-obj-dyn-cont').innerHTML = '<img src="https://datapublic.uam.es/open/img-bi/spinner.gif" width="24px" style="margin-right: -20px;">';
 
