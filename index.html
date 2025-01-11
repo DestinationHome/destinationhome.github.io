@@ -757,8 +757,13 @@ function fetchFeatured() {
                     var response = JSON.parse(xhr.responseText);
                     var searchResult = response.data.object;
                     var thisUuid = searchResult.uuid;
-                    var thisImage = searchResult.images.small.replace('[THUMBNAIL_ROOT]', '');
-                    var thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
+		    var thisImage = "";
+
+		    if (searchResult.images !== null) {
+	      		thisImage = searchResult..images.small;
+              		thisImage = thisImage.replace('[THUMBNAIL_ROOT]', '');
+              	        thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
+	  	    }
 
                     var thisDescription = "No description available.";
                     if (searchResult.description !== null) {
@@ -915,9 +920,13 @@ function fetchData(searchQuery) {
           results_loaded++;
           itemsLoaded++;
           var thisUuid = searchResults[i].uuid;
-          var thisImage = searchResults[i].images.small;
-          var thisImage = thisImage.replace('[THUMBNAIL_ROOT]', '');
-          var thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
+	  var thisImage = "";
+
+	  if (searchResults[i].images !== null) {
+	      thisImage = searchResults[i].images.small;
+              thisImage = thisImage.replace('[THUMBNAIL_ROOT]', '');
+              thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
+	  }
 
           var thisDescription = "No description available.";
           if (searchResults[i].description !== null) {
