@@ -760,7 +760,7 @@ function fetchFeatured() {
 		    var thisImage = "";
 
 		    if (searchResult.images !== null) {
-	      		thisImage = searchResult..images.small;
+	      		thisImage = searchResult.images.small;
               		thisImage = thisImage.replace('[THUMBNAIL_ROOT]', '');
               	        thisImage = "https://raw.githubusercontent.com/DestinationHome/ImageArchive/master/" + thisUuid + "/" + thisImage;
 	  	    }
